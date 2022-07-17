@@ -9,6 +9,7 @@ public class Article {
     private String title;
     private String content;
     private String hashtag;
+
     private LocalDateTime createdAt;
     private String createdBy;
     private LocalDateTime modifedAt;
