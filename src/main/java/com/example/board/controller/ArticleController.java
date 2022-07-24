@@ -21,7 +21,8 @@ public class ArticleController {
 
     @GetMapping("/{articleId}")
     public String article(@PathVariable Long articleId, ModelMap map) {
-        map.addAttribute("article", null);
+        //TODO articleDto 를 반환시켜줘야 함.
+        map.addAttribute("article", "article");
         map.addAttribute("articleComments", List.of());
 
         return "articles/detail";
