@@ -1,10 +1,7 @@
 package com.example.board.dto;
 
-import lombok.Data;
-
 import java.time.LocalDateTime;
 
-@Data
 public record ArticleCommentDto(
         LocalDateTime createdAt,
         String createdBy,

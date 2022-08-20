@@ -8,6 +8,9 @@ build/
 # Querydsl
 /src/main/generated
 
+# jpaBuddy
+.jpb/
+
 ### STS ###
 .apt_generated
 .classpath

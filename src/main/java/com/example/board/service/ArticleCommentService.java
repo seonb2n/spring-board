@@ -23,4 +23,10 @@ public class ArticleCommentService {
     public void saveArticle(ArticleCommentDto articleCommentDto) {
 
     }
+
+    @Transactional(readOnly = true)
+    public List<ArticleCommentDto> searchArticleComments(Long articleId) {
+        return List.of();
+    }
+
 }

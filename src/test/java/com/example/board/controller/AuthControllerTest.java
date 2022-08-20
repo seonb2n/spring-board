@@ -32,5 +32,18 @@ public class AuthControllerTest {
                 .andExpect(content().contentTypeCompatibleWith(MediaType.TEXT_HTML));
     }
 
+    @DisplayName("[view] [GET] 로그인 페이지 - 정상 호출")
+    @Test
+    public void givenNothing_whenTryingToLogIn_thenReturnsLogInView() throws Exception {
+        //given
+
+
+        //when & then
+        mockMvc.perform(get("/login"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.TEXT_HTML));
+
+    }
+
 
 }

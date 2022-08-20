@@ -3,21 +3,27 @@ package com.example.board.domain;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+
 import javax.persistence.*;
 import java.util.Objects;
 
 @Getter
-@ToString
+@ToString(callSuper = true)
 @Table(indexes = {
         @Index(columnList = "content"),
         @Index(columnList = "createdAt"),
         @Index(columnList = "createdBy"),
 })
 @Entity
-public class ArticleComment extends AuditingFields{
+public class ArticleComment extends AuditingFields {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Setter
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "userId")
+    private UserAccount userAccount; // 유저 정보 (ID)
 
     @Setter
     @ManyToOne(optional = false)
@@ -26,15 +32,17 @@ public class ArticleComment extends AuditingFields{
     @Column(nullable = false, length = 500)
     private String content;
 
-    protected ArticleComment() {}
+    protected ArticleComment() {
+    }
 
-    private ArticleComment(Article article, String content) {
+    private ArticleComment(UserAccount userAccount, Article article, String content) {
+        this.userAccount = userAccount;
         this.article = article;
         this.content = content;
     }
 
-    private ArticleComment of(Article article, String content) {
-        return new ArticleComment(article, content);
+    public static ArticleComment of(UserAccount userAccount, Article article, String content) {
+        return new ArticleComment(userAccount, article, content);
     }
 
     @Override
