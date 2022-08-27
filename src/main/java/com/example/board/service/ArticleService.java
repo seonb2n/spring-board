@@ -3,6 +3,7 @@ package com.example.board.service;
 import com.example.board.domain.Article;
 import com.example.board.domain.type.SearchType;
 import com.example.board.dto.ArticleDto;
+import com.example.board.dto.ArticleWithCommentsDto;
 import com.example.board.repository.ArticleRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -44,6 +45,13 @@ public class ArticleService {
         };
     }
 
+    @Transactional(readOnly = true)
+    public ArticleWithCommentsDto getArticle(Long articleId) {
+        return articleRepository.findById(articleId)
+                .map(ArticleWithCommentsDto::from)
+                .orElseThrow(() -> new EntityNotFoundException("게시글이 없습니다 - articleId: " + articleId));
+    }
+
     /**
      * 게시물을 저장하는 메서드
      *
@@ -53,6 +61,12 @@ public class ArticleService {
         articleRepository.save(dto.toEntity());
     }
 
+    /**
+     * \
+     * 게시물을 업데이트하는 메서드
+     *
+     * @param dto
+     */
     public void updateArticle(ArticleDto dto) {
         try {
             Article article = articleRepository.getReferenceById(dto.id());
