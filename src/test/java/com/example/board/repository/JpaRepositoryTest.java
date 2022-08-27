@@ -18,12 +18,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 @DataJpaTest
 class JpaRepositoryTest {
 
-    private final UserRepository userAccountRepository;
+    private final UserAccountRepository userAccountRepository;
     private final ArticleRepository articleRepository;
     private final ArticleCommentRepository articleCommentRepository;
 
     public JpaRepositoryTest(
-            @Autowired UserRepository userRepository,
+            @Autowired UserAccountRepository userRepository,
             @Autowired ArticleRepository articleRepository,
             @Autowired ArticleCommentRepository articleCommentRepository
     ) {

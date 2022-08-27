@@ -18,6 +18,20 @@ public interface ArticleCommentRepository extends
         QuerydslPredicateExecutor<ArticleComment>,
         QuerydslBinderCustomizer<QArticleComment> {
 
+    /**
+     * ArticleComment 와 연관관계가 있는 article 의 id 를 사용해서 ArticleComment 를 조회한다.
+     *
+     * @param articleId
+     * @return
+     */
+    List<ArticleComment> findByArticle_Id(Long articleId);
+
+    /**
+     * querydsl 을 사용해서 나용을 포함하고 있는 comments 를 검색한다.
+     *
+     * @param bindings
+     * @param root
+     */
     @Override
     default void customize(QuerydslBindings bindings, QArticleComment root) {
         bindings.excludeUnlistedProperties(true);
@@ -27,9 +41,5 @@ public interface ArticleCommentRepository extends
         bindings.bind(root.createdAt).first(DateTimeExpression::eq);
         bindings.bind(root.createdBy).first(StringExpression::containsIgnoreCase);
     }
-
-    List<ArticleComment> findByArticle_Id(Long articleId);
-
-    void deleteByIdAndUserAccount_UserId(Long articleCommentId, String userId);
 
 }

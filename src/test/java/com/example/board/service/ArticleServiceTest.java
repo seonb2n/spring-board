@@ -3,7 +3,6 @@ package com.example.board.service;
 import com.example.board.domain.Article;
 import com.example.board.domain.type.SearchType;
 import com.example.board.dto.ArticleDto;
-import com.example.board.dto.ArticleUpdateDto;
 import com.example.board.repository.ArticleRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

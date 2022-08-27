@@ -6,7 +6,7 @@ import com.example.board.domain.UserAccount;
 import com.example.board.dto.ArticleCommentDto;
 import com.example.board.repository.ArticleCommentRepository;
 import com.example.board.repository.ArticleRepository;
-import com.example.board.repository.UserRepository;
+import com.example.board.repository.UserAccountRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -30,7 +30,7 @@ public class ArticleCommentServiceTest {
     private ArticleCommentService sut;
 
     @Mock
-    private UserRepository userAccountRepository;
+    private UserAccountRepository userAccountRepository;
 
     @Mock
     private ArticleRepository articleRepository;
@@ -63,7 +63,7 @@ public class ArticleCommentServiceTest {
         var articleCommentDto = ArticleCommentDto.of(LocalDateTime.now(), "sb", LocalDateTime.now(), "sb", "content");
 
         //when
-        sut.saveArticle(articleCommentDto);
+        sut.saveArticleComment(articleCommentDto);
 
         //then
         then(articleCommentRepository).should().save(any(ArticleComment.class));
