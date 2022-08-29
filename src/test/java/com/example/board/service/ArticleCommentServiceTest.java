@@ -14,11 +14,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 
@@ -56,18 +54,6 @@ public class ArticleCommentServiceTest {
         then(articleCommentRepository).should().findByArticle_Id(articleId);
     }
 
-    @DisplayName("댓글 정보 입력하면, 해당 댓글 저장")
-    @Test
-    public void givenArticleDto_whenArticleDto_thenSaveArticle() throws Exception {
-        //given
-        var articleCommentDto = ArticleCommentDto.of(LocalDateTime.now(), "sb", LocalDateTime.now(), "sb", "content");
-
-        //when
-        sut.saveArticleComment(articleCommentDto);
-
-        //then
-        then(articleCommentRepository).should().save(any(ArticleComment.class));
-    }
 
     private ArticleComment createArticleComment(String content) {
         return ArticleComment.of(

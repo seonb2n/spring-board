@@ -124,16 +124,20 @@ class ArticleServiceTest {
         //given
         Article article = createArticle();
         ArticleDto dto = createArticleDto("새 타이틀", "새 내용", "#springboot");
-        given(articleRepository.save(any(Article.class))).willReturn(null);
+        given(articleRepository.getReferenceById(any())).willReturn(article);
 
         //when
         sut.updateArticle(dto);
 
         //then
-        then(articleRepository).should().save(any(Article.class));
+        assertThat(article)
+                .hasFieldOrPropertyWithValue("title", dto.title())
+                .hasFieldOrPropertyWithValue("content", dto.content())
+                .hasFieldOrPropertyWithValue("hashtag", dto.hashtag());
+        then(articleRepository).should().getReferenceById(dto.id());
     }
 
-    @DisplayName("없는 게시글의 수정 정보를 입력하면 경고 로그를 직는다.")
+    @DisplayName("없는 게시글의 수정 정보를 입력하면 경고 로그를 찍는다.")
     @Test
     public void givenNonexistentArticleInfo_whenUpdatingArticle_thenLogsWarningAndDoesNothing() throws Exception {
         //given
@@ -150,14 +154,11 @@ class ArticleServiceTest {
     @DisplayName("게시글 ID를 입력하면, 게시글을 삭제한다.")
     @Test
     void givenArticleId_whenDeleteArticle_thenDeleteArticle() {
-        //given
-        willDoNothing().given(articleRepository).delete(any(Article.class));
-
         //when
         sut.deleteArticle(1L);
 
         //then
-        then(articleRepository).should().delete(any(Article.class));
+        verify(articleRepository, atLeastOnce()).deleteById(any());
     }
 
     @DisplayName("게시글 수를 조회하면, 게시글 수를 반환한다.")
