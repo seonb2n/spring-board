@@ -22,7 +22,8 @@ public class UserAccount extends AuditingFields {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(length = 50)
+    @Setter
+    @Column(nullable = false, length = 50)
     private String userId;
 
     @Setter
