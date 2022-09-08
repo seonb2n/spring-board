@@ -2,6 +2,7 @@ package com.example.board.dto;
 
 import com.example.board.domain.Article;
 import com.example.board.domain.ArticleComment;
+import com.example.board.domain.UserAccount;
 
 import java.time.LocalDateTime;
 
@@ -36,10 +37,10 @@ public record ArticleCommentDto(
         );
     }
 
-    public ArticleComment toEntity(Article entity) {
+    public ArticleComment toEntity(Article article, UserAccount userAccount) {
         return ArticleComment.of(
-                userAccountDto.toEntity(),
-                entity,
+                article,
+                userAccount,
                 content
         );
     }
