@@ -67,6 +67,8 @@ public interface ArticleRepository
      */
     Page<Article> findByHashtag(String hashtag, Pageable pageable);
 
+    void deleteByIdAndUserAccount_UserId(Long articleId, String userId);
+
     /**
      * Querydsl 을 사용해서 내용을 포함하는 Article 을 검색한다.
      *

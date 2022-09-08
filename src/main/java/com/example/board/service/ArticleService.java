@@ -86,7 +86,6 @@ public class ArticleService {
     }
 
     /**
-     * \
      * 게시물을 업데이트하는 메서드
      *
      * @param dto
@@ -94,20 +93,31 @@ public class ArticleService {
     public void updateArticle(Long articleId, ArticleDto dto) {
         try {
             Article article = articleRepository.getReferenceById(articleId);
-            if (dto.title() != null) {
-                article.setTitle(dto.title());
+            UserAccount userAccount = userAccountRepository.getReferenceById(dto.userAccountDto().userId());
+
+            //게시글의 사용자와 인증된 사용자가 동일한지 검증
+            if (article.getUserAccount().equals(userAccount)) {
+                if (dto.title() != null) {
+                    article.setTitle(dto.title());
+                }
+                if (dto.content() != null) {
+                    article.setContent(dto.content());
+                }
+                article.setHashtag(dto.hashtag());
             }
-            if (dto.content() != null) {
-                article.setContent(dto.content());
-            }
-            article.setHashtag(dto.hashtag());
         } catch (EntityNotFoundException e) {
-            log.warn("게시글 업데이트 실패. 게시글을 찾을 수 없습니다 - dto: {}", dto);
+            log.warn("게시글 업데이트 실패. 게시글에 필요한 정보를 찾을 수 없습니다 - : {}", e.getLocalizedMessage());
         }
     }
 
-    public void deleteArticle(long articleId) {
-        articleRepository.deleteById(articleId);
+    /**
+     * 글의 작성자만이 글을 삭제할 수 있도록
+     *
+     * @param articleId
+     * @param userId
+     */
+    public void deleteArticle(long articleId, String userId) {
+        articleRepository.deleteByIdAndUserAccount_UserId(articleId, userId);
     }
 
     public long getArticleCount() {
