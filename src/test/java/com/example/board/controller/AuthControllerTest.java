@@ -1,9 +1,15 @@
 package com.example.board.controller;
 
+import com.example.board.config.TestSecurityConfig;
+import com.example.board.service.ArticleCommentService;
+import com.example.board.service.ArticleService;
+import com.example.board.service.PaginationService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -12,10 +18,20 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest
+@Import(TestSecurityConfig.class)
 @DisplayName("View 컨트롤러 - 인증")
 public class AuthControllerTest {
 
     private final MockMvc mockMvc;
+
+    @MockBean
+    private ArticleService articleService;
+
+    @MockBean
+    private ArticleCommentService articleCommentService;
+
+    @MockBean
+    private PaginationService paginationService;
 
     public AuthControllerTest(@Autowired MockMvc mvc) {
         this.mockMvc = mvc;
