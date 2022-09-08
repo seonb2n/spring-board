@@ -73,8 +73,8 @@ public class ArticleCommentService {
      *
      * @param articleCommendId
      */
-    public void deleteArticleComment(Long articleCommendId) {
-        articleCommentRepository.deleteById(articleCommendId);
+    public void deleteArticleComment(Long articleCommentId, String userId) {
+        articleCommentRepository.deleteByIdAndUserAccount_UserId(articleCommentId, userId);
     }
 
 }

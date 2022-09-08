@@ -199,6 +199,7 @@ class ArticleServiceTest {
         Article article = createArticle();
         ArticleDto dto = createArticleDto("새 타이틀", "새 내용", "#springboot");
         given(articleRepository.getReferenceById(any())).willReturn(article);
+        given(userAccountRepository.getReferenceById(dto.userAccountDto().userId())).willReturn(dto.userAccountDto().toEntity());
 
         //when
         sut.updateArticle(dto.id(), dto);
@@ -209,6 +210,7 @@ class ArticleServiceTest {
                 .hasFieldOrPropertyWithValue("content", dto.content())
                 .hasFieldOrPropertyWithValue("hashtag", dto.hashtag());
         then(articleRepository).should().getReferenceById(dto.id());
+        then(userAccountRepository).should().getReferenceById(dto.userAccountDto().userId());
     }
 
     @DisplayName("없는 게시글의 수정 정보를 입력하면 경고 로그를 찍는다.")
@@ -228,11 +230,16 @@ class ArticleServiceTest {
     @DisplayName("게시글 ID를 입력하면, 게시글을 삭제한다.")
     @Test
     void givenArticleId_whenDeleteArticle_thenDeleteArticle() {
+        //given
+        Long articleId = 1L;
+        String userId = "sb";
+        willDoNothing().given(articleRepository).deleteByIdAndUserAccount_UserId(articleId, userId);
+
         //when
-        sut.deleteArticle(1L);
+        sut.deleteArticle(articleId, userId);
 
         //then
-        verify(articleRepository, atLeastOnce()).deleteById(any());
+        verify(articleRepository, atLeastOnce()).deleteByIdAndUserAccount_UserId(articleId, userId);
     }
 
     @DisplayName("게시글 수를 조회하면, 게시글 수를 반환한다.")

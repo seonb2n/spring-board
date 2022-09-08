@@ -27,6 +27,14 @@ public interface ArticleCommentRepository extends
     List<ArticleComment> findByArticle_Id(Long articleId);
 
     /**
+     * ArticleComment 를 UserAccount 의 User Id 와 연관관계가 있는 경우에만 삭제한다.
+     *
+     * @param articleCommentId
+     * @param userId
+     */
+    void deleteByIdAndUserAccount_UserId(Long articleCommentId, String userId);
+
+    /**
      * querydsl 을 사용해서 나용을 포함하고 있는 comments 를 검색한다.
      *
      * @param bindings
