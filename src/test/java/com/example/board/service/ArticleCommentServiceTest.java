@@ -4,6 +4,7 @@ import com.example.board.domain.Article;
 import com.example.board.domain.ArticleComment;
 import com.example.board.domain.UserAccount;
 import com.example.board.dto.ArticleCommentDto;
+import com.example.board.dto.UserAccountDto;
 import com.example.board.repository.ArticleCommentRepository;
 import com.example.board.repository.ArticleRepository;
 import com.example.board.repository.UserAccountRepository;
@@ -14,6 +15,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -54,6 +56,32 @@ public class ArticleCommentServiceTest {
         then(articleCommentRepository).should().findByArticle_Id(articleId);
     }
 
+    private ArticleCommentDto createArticleCommentDto(String content) {
+        return ArticleCommentDto.of(
+                1L,
+                1L,
+                createUserAccountDto(),
+                content,
+                LocalDateTime.now(),
+                "uno",
+                LocalDateTime.now(),
+                "uno"
+        );
+    }
+
+    private UserAccountDto createUserAccountDto() {
+        return UserAccountDto.of(
+                "uno",
+                "password",
+                "uno@mail.com",
+                "Uno",
+                "This is memo",
+                LocalDateTime.now(),
+                "uno",
+                LocalDateTime.now(),
+                "uno"
+        );
+    }
 
     private ArticleComment createArticleComment(String content) {
         return ArticleComment.of(
