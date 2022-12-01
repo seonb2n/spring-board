@@ -1,6 +1,7 @@
 package com.example.board.dto.request;
 
 import com.example.board.dto.ArticleDto;
+import com.example.board.dto.HashtagDto;
 import com.example.board.dto.UserAccountDto;
 
 import java.util.Set;
