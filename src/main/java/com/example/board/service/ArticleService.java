@@ -6,6 +6,7 @@ import com.example.board.domain.type.SearchType;
 import com.example.board.dto.ArticleDto;
 import com.example.board.dto.ArticleWithCommentsDto;
 import com.example.board.repository.ArticleRepository;
+import com.example.board.repository.HashtagRepository;
 import com.example.board.repository.UserAccountRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,6 +27,9 @@ public class ArticleService {
 
     private final ArticleRepository articleRepository;
     private final UserAccountRepository userAccountRepository;
+    private final HashtagRepository hashtagRepository;
+    private final HashtagService hashtagService;
+
 
     /**
      * 조건에 맞는 게시물을 찾아주는 메서드
@@ -88,6 +92,7 @@ public class ArticleService {
     public void saveArticle(ArticleDto dto) {
         UserAccount userAccount = userAccountRepository.getReferenceById(dto.userAccountDto().userId());
         articleRepository.save(dto.toEntity(userAccount));
+        hashtagService.parseHashtagNames(dto.content());
     }
 
     /**
@@ -138,6 +143,7 @@ public class ArticleService {
 
 
     public List<String> getHashtags() {
-        return articleRepository.findAllDistinctHashtags();
+//        return articleRepository.findAllDistinctHashtags();
+        return hashtagRepository.findAllHashtagNames();
     }
 }

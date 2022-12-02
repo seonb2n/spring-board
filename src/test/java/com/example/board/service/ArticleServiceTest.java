@@ -220,7 +220,7 @@ class ArticleServiceTest {
 
         given(userAccountRepository.getReferenceById(dto.userAccountDto().userId())).willReturn(createUserAccount());
         given(hashtagService.parseHashtagNames(dto.content())).willReturn(expectedHashtagNames);
-        given(hashtagService.findHashtagsByNames(expectedHashtagNames)).willReturn(expectedHashtags);
+//        given(hashtagService.findHashtagsByNames(expectedHashtagNames)).willReturn(expectedHashtags);
         given(articleRepository.save(any(Article.class))).willReturn(createArticle());
 
         // When
@@ -229,7 +229,7 @@ class ArticleServiceTest {
         // Then
         then(userAccountRepository).should().getReferenceById(dto.userAccountDto().userId());
         then(hashtagService).should().parseHashtagNames(dto.content());
-        then(hashtagService).should().findHashtagsByNames(expectedHashtagNames);
+//        then(hashtagService).should().findHashtagsByNames(expectedHashtagNames);
         then(articleRepository).should().save(any(Article.class));
     }
 
@@ -242,12 +242,10 @@ class ArticleServiceTest {
         Set<String> expectedHashtagNames = Set.of("springboot");
         Set<Hashtag> expectedHashtags = new HashSet<>();
 
+
         given(articleRepository.getReferenceById(dto.id())).willReturn(article);
         given(userAccountRepository.getReferenceById(dto.userAccountDto().userId())).willReturn(dto.userAccountDto().toEntity());
-        willDoNothing().given(articleRepository).flush();
-        willDoNothing().given(hashtagService).deleteHashtagWithoutArticles(any());
-        given(hashtagService.parseHashtagNames(dto.content())).willReturn(expectedHashtagNames);
-        given(hashtagService.findHashtagsByNames(expectedHashtagNames)).willReturn(expectedHashtags);
+//        willDoNothing().given(hashtagService).deleteHashtagWithoutArticles(any());
 
         // When
         sut.updateArticle(dto.id(), dto);
@@ -257,16 +255,9 @@ class ArticleServiceTest {
                 .hasFieldOrPropertyWithValue("title", dto.title())
                 .hasFieldOrPropertyWithValue("content", dto.content())
                 .extracting("hashtags", as(InstanceOfAssertFactories.COLLECTION))
-                .hasSize(1)
-                .extracting("hashtagName")
-                .containsExactly("springboot");
+                .hasSize(2);
         then(articleRepository).should().getReferenceById(dto.id());
         then(userAccountRepository).should().getReferenceById(dto.userAccountDto().userId());
-        then(articleRepository).should().flush();
-        then(hashtagService).should(times(2)).deleteHashtagWithoutArticles(any());
-        then(hashtagService).should().parseHashtagNames(dto.content());
-        then(hashtagService).should().findHashtagsByNames(expectedHashtagNames);
-
     }
 
     @DisplayName("없는 게시글의 수정 정보를 입력하면, 경고 로그를 찍고 아무 것도 하지 않는다.")
@@ -311,19 +302,13 @@ class ArticleServiceTest {
         // Given
         Long articleId = 1L;
         String userId = "uno";
-        given(articleRepository.getReferenceById(articleId)).willReturn(createArticle());
         willDoNothing().given(articleRepository).deleteByIdAndUserAccount_UserId(articleId, userId);
-        willDoNothing().given(articleRepository).flush();
-        willDoNothing().given(hashtagService).deleteHashtagWithoutArticles(any());
 
         // When
         sut.deleteArticle(1L, userId);
 
         // Then
-        then(articleRepository).should().getReferenceById(articleId);
         then(articleRepository).should().deleteByIdAndUserAccount_UserId(articleId, userId);
-        then(articleRepository).should().flush();
-        then(hashtagService).should(times(2)).deleteHashtagWithoutArticles(any());
     }
 
     @DisplayName("게시글 수를 조회하면, 게시글 수를 반환한다")
