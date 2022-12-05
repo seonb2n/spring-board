@@ -18,4 +18,6 @@ public interface HashtagRepository extends
     Optional<Hashtag> findByHashtagName(String hashtagName);
 
     List<Hashtag> findByHashtagNameIn(Set<String> hashtagNames);
+
+    void deleteByHashtagName(String name);
 }
