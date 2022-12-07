@@ -37,7 +37,6 @@ class HashtagServiceTest {
     void givenContent_whenParsing_thenReturnHashTagSet(String input, Set<String> expected) {
         //given
 
-
         //when
         Set<String> actual = sut.parseHashtagNames(input);
 
