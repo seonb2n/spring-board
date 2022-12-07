@@ -14,14 +14,12 @@ public class HashtagService {
     private final HashtagRepository hashtagRepository;
 
     /**
-     * 이름으로 해시태그 만들기
+     * 본문의 내용을 바탕으로 # 이 붙은 단어를 HashTag Set 으로 파싱
      * @param content
      * @return
      */
-    public Object parseHashtagNames(String content) {
-        var hashtagDto = HashtagDto.of(content);
-        var initHashTag = hashtagDto.toEntity();
-        return hashtagRepository.save(initHashTag);
+    public Set<String> parseHashtagNames(String content) {
+        return null;
     }
 
     /**

@@ -1,6 +1,7 @@
 package com.example.board.service;
 
 import com.example.board.domain.Article;
+import com.example.board.domain.Hashtag;
 import com.example.board.domain.UserAccount;
 import com.example.board.domain.type.SearchType;
 import com.example.board.dto.ArticleDto;
@@ -18,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityNotFoundException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 @RequiredArgsConstructor
 @Service
@@ -27,8 +29,8 @@ public class ArticleService {
 
     private final ArticleRepository articleRepository;
     private final UserAccountRepository userAccountRepository;
-    private final HashtagRepository hashtagRepository;
     private final HashtagService hashtagService;
+    private final HashtagRepository hashtagRepository;
 
 
     /**
@@ -91,7 +93,6 @@ public class ArticleService {
      */
     public void saveArticle(ArticleDto dto) {
         UserAccount userAccount = userAccountRepository.getReferenceById(dto.userAccountDto().userId());
-        articleRepository.save(dto.toEntity(userAccount));
         hashtagService.parseHashtagNames(dto.content());
     }
 
