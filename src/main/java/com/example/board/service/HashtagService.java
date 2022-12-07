@@ -1,11 +1,16 @@
 package com.example.board.service;
 
+import com.example.board.domain.Hashtag;
 import com.example.board.dto.HashtagDto;
 import com.example.board.repository.HashtagRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashSet;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 @RequiredArgsConstructor
@@ -19,23 +24,37 @@ public class HashtagService {
      * @return
      */
     public Set<String> parseHashtagNames(String content) {
-        return null;
+        if (content == null) {
+            return Set.of();
+        }
+
+        Pattern pattern = Pattern.compile("#[\\w가-힣]+");
+        Matcher matcher = pattern.matcher(content.strip());
+        Set<String> result = new HashSet<>();
+
+        while (matcher.find()) {
+            result.add(matcher.group().replace("#", ""));
+        }
+
+        return Set.copyOf(result);
     }
 
     /**
      * 이름으로 해시태그 찾기
-     * @param expectedHashtagNames
      * @return
      */
-    public Object findHashtagsByNames(Set<String> expectedHashtagNames) {
-        return hashtagRepository.findAllHashtagNames();
+    @Transactional(readOnly = true)
+    public Set<Hashtag> findHashtagsByNames(Set<String> hashtagNames) {
+        return new HashSet<>(hashtagRepository.findByHashtagNameIn(hashtagNames));
     }
-
     /**
-     * hashtag 삭제
-     * @param any
+     * 해시태그 삭제
+     * @param hashtagId
      */
-    public void deleteHashtagWithoutArticles(Object any) {
-        hashtagRepository.deleteByHashtagName(any.toString());
+    public void deleteHashtagWithoutArticles(Long hashtagId) {
+        Hashtag hashtag = hashtagRepository.getReferenceById(hashtagId);
+        if (hashtag.getArticles().isEmpty()) {
+            hashtagRepository.delete(hashtag);
+        }
     }
 }
