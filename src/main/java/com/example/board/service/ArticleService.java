@@ -132,8 +132,7 @@ public class ArticleService {
     }
 
     /**
-     * 글의 작성자만이 글을 삭제할 수 있도록
-     *
+     * 검색한 게시글의 해시태그를 모두 검색한다. 이후 게시글을 지운고 해시태그를 지운다.
      * @param articleId
      * @param userId
      */
@@ -181,9 +180,9 @@ public class ArticleService {
     }
 
     /**
-     * Content 를 바탕으로 해시태그 만들기
+     * Content 를 바탕으로 해시태그 만들고, db 에 존재하던 hashtag 와 비교해서 set 으로 만듦
      * @param content
-     * @return
+     * @return 게시글로부터 추출된 해시태그 셋. 이미 존재하는 해시태그는 db 로부터 가져온 entity 이다.
      */
     private Set<Hashtag> renewHashtagsFromContent(String content) {
         Set<String> hashtagNamesInContent = hashtagService.parseHashtagNames(content);
