@@ -71,7 +71,7 @@ public class ArticleCommentService {
     /**
      * 댓글 삭제하는 메서드
      *
-     * @param articleCommendId
+     * @param articleCommentId
      */
     public void deleteArticleComment(Long articleCommentId, String userId) {
         articleCommentRepository.deleteByIdAndUserAccount_UserId(articleCommentId, userId);
