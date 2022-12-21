@@ -1,11 +1,12 @@
 package com.example.board.dto.response;
 
+import com.example.board.dto.ArticleCommentDto;
 import com.example.board.dto.ArticleWithCommentsDto;
 import com.example.board.dto.HashtagDto;
 
 import java.time.LocalDateTime;
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public record ArticleWithCommentsResponse(
@@ -42,10 +43,37 @@ public record ArticleWithCommentsResponse(
                 dto.userAccountDto().email(),
                 nickname,
                 dto.userAccountDto().userId(),
-                dto.articleCommentDtos().stream()
-                        .map(ArticleCommentResponse::from)
-                        .collect(Collectors.toCollection(LinkedHashSet::new))
+                //articleSet 을 대댓글 계층구조에 맞는 treeSet 형태로 변환하여 반환한다.
+                organizeArticleComment(dto.articleCommentDtos())
         );
+    }
+
+    /**
+     * ArticleCommentDto set 을 대댓글 관계에 맞는 형태의 TreeSet 으로 매핑
+     * @param dtos
+     * @return
+     */
+    private static Set<ArticleCommentResponse> organizeArticleComment(Set<ArticleCommentDto> dtos) {
+        //ArticleCommentDto 를 Id 를 key 로 하는 ArticleCommentResponse Map 으로 만든다.
+        Map<Long, ArticleCommentResponse> map = dtos.stream()
+                .map(ArticleCommentResponse::from)
+                .collect(Collectors.toMap(ArticleCommentResponse::id, Function.identity()));
+
+        //map 을 순환하면서 대댓글을 추출해서 부모에 매핑한다.
+        map.values().stream().filter(ArticleCommentResponse::hasParentComment)
+                .forEach(comment -> {
+                    var parentComment = map.get(comment.parentCommentId());
+                    parentComment.childComments().add(comment);
+                });
+
+        //map 내부에서 부모가 없는 녀석들만 모아서 TreeSet 으로 반환한다.
+        return map.values().stream().filter(comment -> !comment.hasParentComment())
+                .collect(Collectors.toCollection(() ->
+                        new TreeSet<>(Comparator
+                                .comparing(ArticleCommentResponse::createdAt)
+                                .reversed()
+                                .thenComparingLong(ArticleCommentResponse::id)
+                        )));
     }
 
 }
