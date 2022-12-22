@@ -20,6 +20,7 @@ public record ArticleCommentResponse(
 
     /**
      * 루트 댓글의 response 를 만들 때 사용하는 메서드
+     *
      * @param id
      * @param content
      * @param createdAt
@@ -45,7 +46,15 @@ public record ArticleCommentResponse(
             nickname = dto.userAccountDto().userId();
         }
 
-        return null;
+        return ArticleCommentResponse.of(
+                dto.id(),
+                dto.content(),
+                dto.createdAt(),
+                dto.userAccountDto().email(),
+                nickname,
+                dto.userAccountDto().userId(),
+                dto.parentCommentId()
+        );
     }
 
     public boolean hasParentComment() {
