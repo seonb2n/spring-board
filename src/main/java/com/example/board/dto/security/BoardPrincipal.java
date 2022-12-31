@@ -48,9 +48,6 @@ public record BoardPrincipal(
 
     /**
      * UserAccountDto 로부터 Principal 로 변환
-     *
-     * @param dto
-     * @return
      */
     public static BoardPrincipal from(UserAccountDto dto) {
         return BoardPrincipal.of(
@@ -64,8 +61,6 @@ public record BoardPrincipal(
 
     /**
      * Principal 로부터 UserAccountDto 변환
-     *
-     * @return
      */
     public UserAccountDto toDto() {
         return UserAccountDto.of(
