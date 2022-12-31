@@ -45,3 +45,7 @@ out/
 
 ### svg ###
 document/use-case.svg
+
+
+### kakao ###
+src/main/resources/kakao-oauth.properties
