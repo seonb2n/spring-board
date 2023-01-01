@@ -12,13 +12,21 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
+import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.SecurityFilterChain;
+
+import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration
 public class SpringSecurityConfig {
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(
+            HttpSecurity http,
+            OAuth2UserService<OAuth2UserRequest, OAuth2User> oAuth2UserService
+    ) throws Exception {
         return http
                 .authorizeHttpRequests(auth -> auth
                         // 정적 리소스에 대해 permit all
@@ -33,11 +41,14 @@ public class SpringSecurityConfig {
                         // 그 외 요청에 대해서는 모두 인증 요청
                         .anyRequest().authenticated()
                 )
-                .formLogin()
-                .and()
-                .logout()
-                .logoutSuccessUrl("/")
-                .and()
+                .formLogin(withDefaults())
+                .logout(logout -> logout.logoutSuccessUrl("/"))
+                //oauth 인증 기능 설정
+                .oauth2Login(oAuth -> oAuth
+                        .userInfoEndpoint(userInfo -> userInfo
+                                .userService(oAuth2UserService)
+                        )
+                )
                 .build();
     }
 
@@ -54,6 +65,16 @@ public class SpringSecurityConfig {
                 .map(BoardPrincipal::from)
                 //해당되는 사용자가 없는 경우 Exception 처리
                 .orElseThrow(() -> new UsernameNotFoundException("유저를 찾을 수 없습니다. - username: " + username));
+    }
+
+    /**
+     * OAuth2 에서 사용될 userService
+     *
+     * @return
+     */
+    @Bean
+    public OAuth2UserService<OAuth2UserRequest, OAuth2User> oAuth2UserService() {
+        return null;
     }
 
     /**
