@@ -1,7 +1,7 @@
 package com.example.board.controller;
 
 import com.example.board.config.SpringSecurityConfig;
-import com.example.board.repository.UserAccountRepository;
+import com.example.board.service.UserAccountService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -19,8 +19,7 @@ class MainControllerTest {
     private final MockMvc mvc;
 
     @MockBean
-    private UserAccountRepository userAccountRepository;
-
+    UserAccountService userAccountService;
 
     public MainControllerTest(@Autowired MockMvc mvc) {
         this.mvc = mvc;
